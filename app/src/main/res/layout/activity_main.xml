@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="activities.MainActivity">
 
     <include layout="@layout/toolbar"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvVideos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"/>
