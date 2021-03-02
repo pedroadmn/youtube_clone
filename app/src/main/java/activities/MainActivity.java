@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,8 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adapters.AdapterVideo;
+import api.YoutubeService;
+import helper.YoutubeConfig;
+import models.Result;
 import models.Video;
 import pedroadmn.youtubeclone.com.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+import static helper.RetrofitConfig.getRetrofit;
 
 public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
@@ -38,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
     private YouTubePlayer.PlaybackEventListener playbackEventListener;
     private YouTubePlayer.PlayerStateChangeListener playerStateChangeListener;
 
+    private Retrofit retrofit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
 
         rvVideos = findViewById(R.id.rvVideos);
         searchView = findViewById(R.id.search_view);
+
+        retrofit = getRetrofit();
 
         getVideos();
 
@@ -167,13 +181,21 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
     }
 
     private void getVideos() {
-        Video video1 = new Video();
-        video1.setTitle("Video 1");
-        videos.add(video1);
+        YoutubeService youtubeService = retrofit.create(YoutubeService.class);
 
-        Video video2 = new Video();
-        video2.setTitle("Video 2");
-        videos.add(video2);
+        youtubeService.getVideos("snippet", "date", "20",
+                YoutubeConfig.YOUTUBE_API_KEY, YoutubeConfig.CHANNEL_ID)
+        .enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.d("Result", "Result: " + response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
