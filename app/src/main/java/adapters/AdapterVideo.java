@@ -13,15 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Item;
 import models.Video;
 import pedroadmn.youtubeclone.com.R;
 
 public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder> {
 
-    private List<Video> videos = new ArrayList<>();
+    private List<Item> videos = new ArrayList<>();
     private Context context;
 
-    public AdapterVideo(Context context, List<Video> videos) {
+    public AdapterVideo(Context context, List<Item> videos) {
         this.context = context;
         this.videos = videos;
     }
@@ -35,8 +36,8 @@ public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Video video = videos.get(position);
-        holder.title.setText(video.getTitle());
+        Item video = videos.get(position);
+        holder.title.setText(video.snippet.title);
     }
 
     @Override

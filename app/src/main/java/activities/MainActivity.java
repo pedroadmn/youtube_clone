@@ -26,6 +26,7 @@ import java.util.List;
 import adapters.AdapterVideo;
 import api.YoutubeService;
 import helper.YoutubeConfig;
+import models.Item;
 import models.Result;
 import models.Video;
 import pedroadmn.youtubeclone.com.R;
@@ -39,7 +40,9 @@ import static helper.RetrofitConfig.getRetrofit;
 public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnInitializedListener {
 
     private RecyclerView rvVideos;
-    private List<Video> videos = new ArrayList<>();
+//    private List<Video> videos = new ArrayList<>();
+    private Result result;
+    private List<Item> videos = new ArrayList<>();
     private AdapterVideo videoAdapter;
     private YouTubePlayerView youTubePlayerView;
     private static final String GOOGLE_API_KEY = "AIzaSyC71w5ruIWujm7_9nKsbwUDirFHOtBWhT0";
@@ -61,11 +64,6 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
         retrofit = getRetrofit();
 
         getVideos();
-
-        rvVideos.setHasFixedSize(true);
-        rvVideos.setLayoutManager(new LinearLayoutManager(this));
-        videoAdapter = new AdapterVideo(this, videos);
-        rvVideos.setAdapter(videoAdapter);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Youtube Clone");
@@ -189,6 +187,12 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Log.d("Result", "Result: " + response.toString());
+                if (response.isSuccessful()) {
+                    Result result = response.body();
+                    videos = result.items;
+                    recyclerViewConfig();
+
+                }
             }
 
             @Override
@@ -206,5 +210,12 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
         MenuItem menuItem = menu.findItem(R.id.menu_search);
         searchView.setMenuItem(menuItem);
         return true;
+    }
+
+    private void recyclerViewConfig() {
+        rvVideos.setHasFixedSize(true);
+        rvVideos.setLayoutManager(new LinearLayoutManager(this));
+        videoAdapter = new AdapterVideo(this, videos);
+        rvVideos.setAdapter(videoAdapter);
     }
 }
