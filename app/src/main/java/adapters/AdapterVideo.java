@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,10 @@ public class AdapterVideo extends RecyclerView.Adapter<AdapterVideo.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Item video = videos.get(position);
         holder.title.setText(video.snippet.title);
+
+        String url = video.snippet.thumbnails.high.url;
+
+        Picasso.get().load(url).into(holder.cover);
     }
 
     @Override

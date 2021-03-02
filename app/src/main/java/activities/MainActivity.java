@@ -5,12 +5,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import java.util.List;
 import adapters.AdapterVideo;
 import api.YoutubeService;
 import helper.YoutubeConfig;
+import listeners.RecyclerItemClickListener;
 import models.Item;
 import models.Result;
 import models.Video;
@@ -217,5 +221,28 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
         rvVideos.setLayoutManager(new LinearLayoutManager(this));
         videoAdapter = new AdapterVideo(this, videos);
         rvVideos.setAdapter(videoAdapter);
+
+        rvVideos.addOnItemTouchListener(new RecyclerItemClickListener(this, rvVideos,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Item video = videos.get(position);
+                        String videoId = video.id.videoId;
+
+                        Intent i = new Intent(MainActivity.this, PlayerActivity.class);
+                        i.putExtra("videoId", videoId);
+                        startActivity(i);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    }
+                }));
     }
 }
