@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
 
         retrofit = getRetrofit();
 
-        getVideos();
+        getVideos("");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Youtube Clone");
@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                getVideos(query);
+                return true;
             }
 
             @Override
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
 
             @Override
             public void onSearchViewClosed() {
-
+                getVideos("");
             }
         });
 
@@ -182,11 +183,13 @@ public class MainActivity extends AppCompatActivity implements YouTubePlayer.OnI
         Toast.makeText(this, "Initialized Failure: " + youTubeInitializationResult.toString(), Toast.LENGTH_LONG).show();
     }
 
-    private void getVideos() {
+    private void getVideos(String search) {
         YoutubeService youtubeService = retrofit.create(YoutubeService.class);
 
+        String q = search.replaceAll(" ", "+");
+
         youtubeService.getVideos("snippet", "date", "20",
-                YoutubeConfig.YOUTUBE_API_KEY, YoutubeConfig.CHANNEL_ID)
+                YoutubeConfig.YOUTUBE_API_KEY, YoutubeConfig.CHANNEL_ID, q)
         .enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
